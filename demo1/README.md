@@ -49,7 +49,7 @@ class Demo1Spider(scrapy.spiders.Spider):
     start_urls = ['http://woodenrobot.me']
 
     def parse(self, response):
-        # 利用xPath解析文章标题
+        # 利用xPath解析文章标题(下文解释)
         titles = response.xpath('//a[@class="post-title-link"]/text()').extract()
         for title in titles:
             # 打印
@@ -57,7 +57,29 @@ class Demo1Spider(scrapy.spiders.Spider):
 
 ```
 
-### 4. 启动
+### 4. Selectors选择器简介
+> 从网页中提取数据有很多方法。Scrapy使用了一种基于 XPath 和 CSS 表达式机制: Scrapy Selectors 。 关于selector和其他提取机制的信息请参考 Selector文档 。
+> 
+> 这里给出XPath表达式的例子及对应的含义:
+> 
+> - /html/head/title: 选择HTML文档中 <head> 标签内的 <title> 元素
+> - /html/head/title/text(): 选择上面提到的 <title> 元素的文字
+> - //td: 选择所有的 <td> 元素
+> - //div[@class="mine"]: 选择所有具有 class="mine" 属性的 div 元素
+> XPath详细教程: http://www.w3school.com.cn/xpath/index.asp
+
+
+上面的例子中，我们访问http://woodenrobot.me后，利用浏览器开发者工具（F12）查看页面元素，可以发现标题部分的样式如：
+```
+<a class="post-title-link" href="/2018/02/09/使用-Git-拉取远程仓库分支到本地分支/" itemprop="url">使用 Git 拉取远程仓库分支到本地分支</a>
+```
+所以就有了我们例子中xPath的写法：
+```
+response.xpath('//a[@class="post-title-link"]/text()').extract() //获取样式为post-title-link的<a>标签中的文本内容
+```
+
+
+### 5. 启动
 打开终端进入项目根目录（G:\PythonNotes\Demo1）运行下列命令：
 ```
 scrapy crawl woodenrobot
